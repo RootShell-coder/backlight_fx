@@ -52,7 +52,7 @@ void loop()
   if (millis() - last > 10000)
   {
     LN.logf(__PRETTY_FUNCTION__, LoggerNode::DEBUG,
-            "Free heap: %d bytes. Heap Fragmentation: %d %", ESP.getFreeHeap(), ESP.getHeapFragmentation());
+            "Free heap: %d bytes. Heap Fragmentation: %d", ESP.getFreeHeap(), ESP.getHeapFragmentation());
     last = millis();
   }
 }
