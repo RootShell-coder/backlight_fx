@@ -1,15 +1,12 @@
 #ifndef AMBILIGHT_H
 #define AMBILIGHT_H
 #include <Homie.h>
-#include <WS2812FX.h>
+#include "WS2812FX.h"
 
 
 class ambilightNode : public HomieNode {
     public:
         ambilightNode(const char *id, const char *name, const char *type);
-    #if defined(ESP32)
-        static void myCustomShow();
-    #endif
         void ambilightSetup();
 
     protected:

@@ -1,8 +1,6 @@
 #include "ambilight.h"
 
-#ifdef ARDUINO_ARCH_ESP8266
-  #define AMBILIGHT_PIN D3
-#endif
+#define AMBILIGHT_PIN 3
 
 static WS2812FX *ws2812fx;
 
@@ -35,7 +33,7 @@ bool ambilightNode::handleInput(const HomieRange& range, const String& property,
     }
   }
   if(property == "modefx"){
-    uint8_t modefx = (uint16_t)value.toInt();
+    uint8_t modefx = (uint8_t)value.toInt();
     if( modefx >= 0 && modefx <= 54 ){
       setProperty("modefx").send(String(modefx));
       ws2812fx->setMode(modefx);
@@ -45,7 +43,7 @@ bool ambilightNode::handleInput(const HomieRange& range, const String& property,
 }
 
 void ambilightNode::ambilightSetup(){
-  ambilightLedCount->setDefaultValue(1).setValidator([](float candidate) {
+  ambilightLedCount->setDefaultValue(1).setValidator([](long candidate) {
     return (candidate > 0) && (candidate <= 500);
   });
     ambilightLedColor->setDefaultValue("0x000000").setValidator([] (const char* candidate) {
@@ -62,7 +60,7 @@ void ambilightNode::ambilightSetup(){
   });
 }
 
-void ambilightNode::setup() {
+void ambilightNode::setup(){
       ws2812fx = new WS2812FX(ambilightLedCount->get(), AMBILIGHT_PIN, NEO_GRB + NEO_KHZ800);
       ws2812fx->init();
       String confColor = ambilightLedColor->get();
@@ -81,3 +79,4 @@ void ambilightNode::setup() {
 void ambilightNode::loop() {
   ws2812fx->service();
 }
+
