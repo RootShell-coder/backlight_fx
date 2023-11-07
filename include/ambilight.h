@@ -3,23 +3,22 @@
 #include <Homie.h>
 #include "WS2812FX.h"
 
+class ambilightNode : public HomieNode
+{
+public:
+    ambilightNode(const char *id, const char *name, const char *type);
+    void ambilightSetup();
 
-class ambilightNode : public HomieNode {
-    public:
-        ambilightNode(const char *id, const char *name, const char *type);
-        void ambilightSetup();
+protected:
+    virtual bool handleInput(const HomieRange &range, const String &property, const String &value) override;
+    virtual void setup() override;
+    virtual void loop() override;
 
-    protected:
-        virtual bool handleInput(const HomieRange& range, const String& property, const String& value) override;
-        virtual void setup() override;
-        virtual void loop() override;
-
-    private:
-        HomieSetting<long> *ambilightLedCount;
-        HomieSetting<const char*> *ambilightLedColor;
-        HomieSetting<long> *ambilightLedBrightness;
-        HomieSetting<long> *ambilightLedSpeed;
-        HomieSetting<long> *ambilightLedModeFX;
-
+private:
+    HomieSetting<long> *ambilightLedCount;
+    HomieSetting<const char *> *ambilightLedColor;
+    HomieSetting<long> *ambilightLedBrightness;
+    HomieSetting<long> *ambilightLedSpeed;
+    HomieSetting<long> *ambilightLedModeFX;
 };
 #endif
