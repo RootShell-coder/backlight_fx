@@ -2,7 +2,7 @@
 
 #define AMBILIGHT_PIN 3
 
-static WS2812FX *ws2812fx;
+WS2812FX *ws2812fx;
 
 ambilightNode::ambilightNode(const char *id, const char *name, const char *type) : HomieNode(id, name, type)
 {
