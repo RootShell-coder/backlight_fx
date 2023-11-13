@@ -39,10 +39,12 @@ void setup()
   Serial << endl
          << endl;
   Serial.flush();
+  Homie.disableResetTrigger();
   Homie_setBrand(BRAND);
   Homie_setFirmware(FW_NAME, FW_VER);
   Homie.onEvent(onHomieEvent);
   AmbilightNode.ambilightSetup();
+  RelayNode.relaySetup();
   Homie.setLoggingPrinter(&Serial);
   Homie.setup();
 }

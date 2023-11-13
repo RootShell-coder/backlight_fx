@@ -1,6 +1,6 @@
 #include "relay.h"
 
-#define RELAY0 5
+#define RELAY0 0
 
 relayNode::relayNode(const char *id, const char *name, const char *type) : HomieNode(id, name, type)
 {
