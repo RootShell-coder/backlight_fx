@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Homie.h>
 #include "ambilight.h"
+#include "relay.h"
 #include <LoggerNode.h>
 
 #define BRAND "Ambilight"
@@ -29,6 +30,7 @@ void onHomieEvent(const HomieEvent &event)
 }
 
 ambilightNode AmbilightNode("ambilight", "Ambilight", "WS2812B");
+relayNode RelayNode("relay", "Relay", "SRD-05VDC-SL-C");
 LoggerNode LN;
 
 void setup()
