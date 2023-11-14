@@ -31,10 +31,9 @@ void relayNode::setup()
 
 void relayNode::relaySetup()
 {
-  relay0->setDefaultValue(0).setValidator([](uint8_t candidate)
+  relay0->setDefaultValue(1).setValidator([](uint8_t candidate)
                                           { return (candidate == 0 || candidate == 1); });
 }
-
 void relayNode::loop()
 {
 }
