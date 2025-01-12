@@ -37,5 +37,5 @@ void relayNode::relaySetup()
 
 void relayNode::loop()
 {
-  // No implementation needed for now
+  // Nothing to do
 }
