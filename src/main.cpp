@@ -8,6 +8,9 @@
 #define FW_NAME "illuminated"
 #define FW_VER "1.2.2"
 
+unsigned long lastReconnectAttempt = 0;
+const unsigned long RECONNECT_INTERVAL = 3600000; // 1 hour in milliseconds
+
 void onHomieEvent(const HomieEvent &event)
 {
   switch (event.type)
@@ -20,10 +23,12 @@ void onHomieEvent(const HomieEvent &event)
       break;
     case HomieEventType::WIFI_DISCONNECTED:
       Serial << "Wi-Fi disconnected, reason: " << (int8_t)event.wifiReason << endl;
+      lastReconnectAttempt = millis();
       Homie.reset();
       break;
     case HomieEventType::MQTT_DISCONNECTED:
       Serial << "MQTT disconnected, reason: " << (int8_t)event.mqttReason << endl;
+      lastReconnectAttempt = millis();
       if (!Homie.isConnected())
       {
         Homie.getMqttClient().disconnect();
@@ -55,4 +60,9 @@ void setup()
 
 void loop(){
   Homie.loop();
+  if (!Homie.isConnected() && (millis() - lastReconnectAttempt >= RECONNECT_INTERVAL))
+  {
+    Serial << "Reconnection failed, rebooting..." << endl;
+    ESP.restart();
+  }
 }
