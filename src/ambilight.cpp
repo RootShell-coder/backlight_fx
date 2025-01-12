@@ -1,6 +1,6 @@
 #include "ambilight.h"
 
-#define AMBILIGHT_PIN 3
+#define AMBILIGHT_PIN D7
 
 WS2812FX *ws2812fx;
 
@@ -17,11 +17,11 @@ bool ambilightNode::handleInput(const HomieRange &range, const String &property,
 {
   if (property == "color")
   {
-    unsigned long color = strtoul(value.c_str(), 0, 16);
-    setProperty("color").send(String(value));
+    unsigned long color = strtoul(value.c_str(), nullptr, 16);
+    setProperty("color").send(value);
     ws2812fx->setColor(color);
   }
-  if (property == "brightness")
+  else if (property == "brightness")
   {
     uint8_t brightness = (uint8_t)value.toInt();
     if (brightness >= 0 && brightness <= 255)
@@ -30,16 +30,16 @@ bool ambilightNode::handleInput(const HomieRange &range, const String &property,
       ws2812fx->setBrightness(brightness);
     }
   }
-  if (property == "speed")
+  else if (property == "speed")
   {
     uint16_t speed = (uint16_t)value.toInt();
     if (speed >= 2 && speed <= 65000)
     {
-      setProperty("speed").send(String(value));
+      setProperty("speed").send(value);
       ws2812fx->setSpeed(speed);
     }
   }
-  if (property == "modefx")
+  else if (property == "modefx")
   {
     uint8_t modefx = (uint8_t)value.toInt();
     if (modefx >= 0 && modefx <= 54)
@@ -70,7 +70,7 @@ void ambilightNode::setup()
   ws2812fx = new WS2812FX(ambilightLedCount->get(), AMBILIGHT_PIN, NEO_GRB + NEO_KHZ800);
   ws2812fx->init();
   String confColor = ambilightLedColor->get();
-  ws2812fx->setColor(strtoul(confColor.c_str(), 0, 16));
+  ws2812fx->setColor(strtoul(confColor.c_str(), nullptr, 16));
   ws2812fx->setBrightness((uint8_t)ambilightLedBrightness->get());
   ws2812fx->setSpeed(ambilightLedSpeed->get());
   ws2812fx->setMode(ambilightLedModeFX->get());

@@ -6,26 +6,32 @@
 
 #define BRAND "Ambilight"
 #define FW_NAME "illuminated"
-#define FW_VER "1.2.1"
+#define FW_VER "1.2.2"
 
 void onHomieEvent(const HomieEvent &event)
 {
   switch (event.type)
   {
-  case HomieEventType::WIFI_CONNECTED:
-    Serial << "Wi-Fi connected: " << (int8_t)event.wifiReason << endl;
-    break;
-  case HomieEventType::MQTT_READY:
-    Serial << "MQTT connected: " << (int8_t)event.mqttReason << endl;
-    break;
-  case HomieEventType::WIFI_DISCONNECTED:
-    Serial << "Wi-Fi disconnected, reason: " << (int8_t)event.wifiReason << endl;
-    break;
-  case HomieEventType::MQTT_DISCONNECTED:
-    Serial << "MQTT disconected, reason: " << (int8_t)event.mqttReason << endl;
-    break;
-  default:
-    break;
+    case HomieEventType::WIFI_CONNECTED:
+      Serial << "Wi-Fi connected: " << (int8_t)event.wifiReason << endl;
+      break;
+    case HomieEventType::MQTT_READY:
+      Serial << "MQTT connected: " << (int8_t)event.mqttReason << endl;
+      break;
+    case HomieEventType::WIFI_DISCONNECTED:
+      Serial << "Wi-Fi disconnected, reason: " << (int8_t)event.wifiReason << endl;
+      Homie.reset();
+      break;
+    case HomieEventType::MQTT_DISCONNECTED:
+      Serial << "MQTT disconnected, reason: " << (int8_t)event.mqttReason << endl;
+      if (!Homie.isConnected())
+      {
+        Homie.getMqttClient().disconnect();
+        Homie.getMqttClient().connect();
+      }
+      break;
+    default:
+      break;
   }
 }
 
@@ -36,10 +42,8 @@ LoggerNode LN;
 void setup()
 {
   Serial.begin(115200);
-  Serial << endl
-         << endl;
+  Serial << endl << endl;
   Serial.flush();
-  Homie.disableResetTrigger();
   Homie_setBrand(BRAND);
   Homie_setFirmware(FW_NAME, FW_VER);
   Homie.onEvent(onHomieEvent);
@@ -49,14 +53,6 @@ void setup()
   Homie.setup();
 }
 
-void loop()
-{
-  static uint32_t last = 0;
+void loop(){
   Homie.loop();
-  if (millis() - last > 10000)
-  {
-    LN.logf(__PRETTY_FUNCTION__, LoggerNode::DEBUG,
-            "Free heap: %d bytes. Heap Fragmentation: %d", ESP.getFreeHeap(), ESP.getHeapFragmentation());
-    last = millis();
-  }
 }

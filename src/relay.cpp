@@ -11,14 +11,14 @@ bool relayNode::handleInput(const HomieRange &range, const String &property, con
 {
   if (property == "relay0")
   {
-    if ((uint8_t)value.toInt() == 0 || (uint8_t)value.toInt() == 1)
+    uint8_t state = (uint8_t)value.toInt();
+    if (state == 0 || state == 1)
     {
-      digitalWrite(RELAY0, value.toInt() ? HIGH : LOW);
+      digitalWrite(RELAY0, state ? HIGH : LOW);
       setProperty("relay0").send(value);
       return true;
     }
   }
-
   return false;
 }
 
@@ -31,9 +31,11 @@ void relayNode::setup()
 
 void relayNode::relaySetup()
 {
-  relay0->setDefaultValue(1).setValidator([](uint8_t candidate)
+  relay0->setDefaultValue(1).setValidator([](long candidate)
                                           { return (candidate == 0 || candidate == 1); });
 }
+
 void relayNode::loop()
 {
+  // No implementation needed for now
 }
